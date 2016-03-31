@@ -60,7 +60,8 @@ public class Graphe {
 	}
 
 	public void tell(String id, String message) {
-		noeuds.get(id).tell(message, null);
+		System.out.println("Message : " + message + ", émis par : " + id);
+		noeuds.get(id).tell(message, ActorRef.noSender());
 	}
 
 }

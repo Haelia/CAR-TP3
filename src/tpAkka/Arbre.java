@@ -66,6 +66,7 @@ public class Arbre {
 	}
 
 	public void tell(String id, String message) {
+		System.out.println("Message : " + message + ", émis par : " + id);
 		noeuds.get(id).tell(message, ActorRef.noSender());
 	}
 
