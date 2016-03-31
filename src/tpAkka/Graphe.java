@@ -13,45 +13,39 @@ import akka.actor.Props;
  * @author Sarah Wissocq
  *
  */
-public class Arbre {
+public class Graphe {
 
-	private final ActorSystem system = ActorSystem.create("MamanCrumbleLeRetour");
+	private final ActorSystem system = ActorSystem.create("SystemGraphe");
 	private HashMap<String, ActorRef> noeuds;
-
-	/**
-	 * http://doc.akka.io/docs/akka/2.4.2/java/untyped-actors.html#creating-
-	 * actors -> Creating Actors with Props:
-	 * 
-	 * final ActorRef myActor =
-	 * system.actorOf(Props.create(MyUntypedActor.class), "myactor");
-	 */
 
 	/**
 	 * Création de l'arbre dans le document de Car
 	 */
-	public Arbre() {
+	public Graphe() {
 		ArrayList<ActorRef> parent = new ArrayList<ActorRef>();
 		ArrayList<ActorRef> gauche = new ArrayList<ActorRef>();
-		ArrayList<ActorRef> droit = new ArrayList<ActorRef>();		
-		
+		ArrayList<ActorRef> droit = new ArrayList<ActorRef>();
+		ArrayList<ActorRef> arc = new ArrayList<ActorRef>();
+		ArrayList<ActorRef> arc2 = new ArrayList<ActorRef>();
+
+		ActorRef noeud1 = system.actorOf(Props.create(Noeud.class, "1", parent));
+		ActorRef noeud2 = system.actorOf(Props.create(Noeud.class, "2", gauche));
 		ActorRef noeud3 = system.actorOf(Props.create(Noeud.class, "3", new ArrayList<ActorRef>()));
-		ActorRef noeud4 = system.actorOf(Props.create(Noeud.class, "4", new ArrayList<ActorRef>()));
-		
+		ActorRef noeud4 = system.actorOf(Props.create(Noeud.class, "4", arc2));
+		ActorRef noeud5 = system.actorOf(Props.create(Noeud.class, "5", droit));
+		ActorRef noeud6 = system.actorOf(Props.create(Noeud.class, "6", arc));
+
+		arc.add(noeud4);
+		arc2.add(noeud6);
+
 		gauche.add(noeud3);
 		gauche.add(noeud4);
-		
-		ActorRef noeud6 = system.actorOf(Props.create(Noeud.class, "6", new ArrayList<ActorRef>()));
-		
+
 		droit.add(noeud6);
-		
-		ActorRef noeud2 = system.actorOf(Props.create(Noeud.class, "2", gauche));
-		ActorRef noeud5 = system.actorOf(Props.create(Noeud.class, "5", droit));
-		
+
 		parent.add(noeud2);
 		parent.add(noeud5);
-		
-		ActorRef noeud1 = system.actorOf(Props.create(Noeud.class, "1", parent));
-		
+
 		noeuds = new HashMap<String, ActorRef>();
 		noeuds.put("1", noeud1);
 		noeuds.put("2", noeud2);
@@ -66,7 +60,7 @@ public class Arbre {
 	}
 
 	public void tell(String id, String message) {
-		noeuds.get(id).tell(message, ActorRef.noSender());
+		noeuds.get(id).tell(message, null);
 	}
 
 }
